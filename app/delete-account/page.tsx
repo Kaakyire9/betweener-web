@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 import { LegalCallout } from "@/components/common/legal-callout";
 import { PageHero } from "@/components/common/page-hero";
+import { SectionShell } from "@/components/common/section-shell";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { buildMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/lib/site-config";
@@ -21,7 +23,7 @@ export default function DeleteAccountPage() {
         description="Google Play requires a public account deletion page. This route explains the default in-app path, fallback support contact, and what users should expect from the process."
       />
 
-      <section className="mx-auto max-w-5xl px-6 py-16 lg:px-8 lg:py-20">
+      <SectionShell className="mx-auto max-w-5xl px-6 py-16 lg:px-8 lg:py-20">
         <LegalCallout className="mb-8">
           <p>
             Replace the in-app navigation path below if your final UI uses different labels. Confirm
@@ -33,7 +35,9 @@ export default function DeleteAccountPage() {
           <Card>
             <CardContent className="space-y-6">
               <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-accent">Preferred path</p>
+                <Badge variant="trust" className="w-fit">
+                  Preferred path
+                </Badge>
                 <h2 className="mt-4 font-display text-4xl text-foreground">Delete your account in the app</h2>
               </div>
 
@@ -45,8 +49,8 @@ export default function DeleteAccountPage() {
                 <li>Follow the confirmation prompts to complete the request.</li>
               </ol>
 
-              <div className="rounded-[24px] border border-white/10 bg-[rgba(255,255,255,0.04)] p-5">
-                <p className="text-sm font-medium text-foreground">Can&apos;t access the app?</p>
+              <div className="rounded-[var(--bet-radius-lg)] border border-[color:var(--border-soft)] bg-[rgba(255,255,255,0.03)] p-5">
+                <p className="text-sm font-semibold text-foreground">Can&apos;t access the app?</p>
                 <p className="mt-3 text-sm leading-7 text-muted-foreground">
                   Email <a href={`mailto:${siteConfig.contact.privacyEmail}`}>{siteConfig.contact.privacyEmail}</a> from the
                   address associated with your account and use the subject line &quot;Delete My Account&quot;.
@@ -58,7 +62,9 @@ export default function DeleteAccountPage() {
           <Card>
             <CardContent className="space-y-6">
               <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-accent">What to expect</p>
+                <Badge variant="warm" className="w-fit">
+                  What to expect
+                </Badge>
                 <h2 className="mt-4 font-display text-4xl text-foreground">Deletion timing and retained data.</h2>
               </div>
 
@@ -80,7 +86,7 @@ export default function DeleteAccountPage() {
             </CardContent>
           </Card>
         </div>
-      </section>
+      </SectionShell>
     </main>
   );
 }

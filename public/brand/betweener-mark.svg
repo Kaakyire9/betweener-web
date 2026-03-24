@@ -1,0 +1,21 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="112" fill="#071311"/>
+  <rect x="24" y="24" width="464" height="464" rx="96" fill="url(#panel)" stroke="url(#border)" stroke-width="2"/>
+  <path d="M176 132H257.5C322.945 132 366 167.234 366 220C366 257.645 342.51 286.742 304.5 297.5C348.104 306.68 376 338.414 376 382C376 440.212 329.651 468 260 468H176V132ZM238 279H254C291.555 279 312 261.209 312 231.5C312 202.411 292.263 186 255.5 186H238V279ZM238 414H262.5C301.052 414 322 397.147 322 365C322 332.747 299.845 315 257 315H238V414Z" fill="url(#letter)"/>
+  <defs>
+    <linearGradient id="panel" x1="256" y1="24" x2="256" y2="488" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#17312C"/>
+      <stop offset="1" stop-color="#122622"/>
+    </linearGradient>
+    <linearGradient id="border" x1="74" y1="62" x2="434" y2="450" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E6D4B8" stop-opacity="0.7"/>
+      <stop offset="0.55" stop-color="#11C5C6" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#7ED6D1" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="letter" x1="276" y1="132" x2="276" y2="468" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5EBDD"/>
+      <stop offset="0.58" stop-color="#E6D4B8"/>
+      <stop offset="1" stop-color="#D6B25E"/>
+    </linearGradient>
+  </defs>
+</svg>

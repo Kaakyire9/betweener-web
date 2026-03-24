@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
 import { PageHero } from "@/components/common/page-hero";
+import { SectionShell } from "@/components/common/section-shell";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { buildMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/lib/site-config";
@@ -20,28 +22,33 @@ export default function SupportPage() {
         description="This page is public so users, App Store Connect reviewers, and Google Play reviewers can quickly locate assistance, safety reporting routes, and account management help."
       />
 
-      <section className="mx-auto max-w-6xl px-6 py-16 lg:px-8 lg:py-20">
+      <SectionShell className="mx-auto max-w-6xl px-6 py-16 lg:px-8 lg:py-20">
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {[
             {
               title: "General support",
               copy: siteConfig.contact.supportEmail,
-              detail: siteConfig.contact.responseWindow
+              detail: siteConfig.contact.responseWindow,
+              variant: "trust" as const
             },
             {
               title: "Privacy requests",
               copy: siteConfig.contact.privacyEmail,
-              detail: "Use this channel for access, deletion, or data handling questions."
+              detail: "Use this channel for access, deletion, or data handling questions.",
+              variant: "warm" as const
             },
             {
               title: "Legal inquiries",
               copy: siteConfig.contact.legalEmail,
-              detail: "For formal notices, counsel, or compliance review."
+              detail: "For formal notices, counsel, or compliance review.",
+              variant: "default" as const
             }
           ].map((item) => (
             <Card key={item.title}>
               <CardContent className="space-y-3">
-                <p className="text-xs uppercase tracking-[0.24em] text-accent">{item.title}</p>
+                <Badge variant={item.variant} className="w-fit">
+                  {item.title}
+                </Badge>
                 <p className="text-lg text-foreground">{item.copy}</p>
                 <p className="text-sm leading-7 text-muted-foreground">{item.detail}</p>
               </CardContent>
@@ -53,7 +60,7 @@ export default function SupportPage() {
           <Card>
             <CardContent className="space-y-6">
               <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-accent">What we can help with</p>
+                <p className="betweener-eyebrow">What we can help with</p>
                 <h2 className="mt-4 font-display text-4xl text-foreground">Account, billing, safety, and access.</h2>
               </div>
               <div className="grid gap-5 md:grid-cols-2">
@@ -65,7 +72,10 @@ export default function SupportPage() {
                   "Reporting unsafe or suspicious behaviour",
                   "Deletion and data handling requests"
                 ].map((item) => (
-                  <div key={item} className="rounded-[22px] border border-white/10 bg-black/12 p-4 text-sm leading-7 text-muted-foreground">
+                  <div
+                    key={item}
+                    className="rounded-[var(--bet-radius-md)] border border-[color:var(--border-soft)] bg-[rgba(7,19,17,0.18)] p-4 text-sm leading-7 text-muted-foreground"
+                  >
                     {item}
                   </div>
                 ))}
@@ -76,7 +86,7 @@ export default function SupportPage() {
           <Card>
             <CardContent className="space-y-5">
               <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-accent">Response details</p>
+                <p className="betweener-eyebrow">Response details</p>
                 <p className="mt-4 text-base leading-8 text-muted-foreground">
                   Support hours: {siteConfig.contact.supportHours}
                 </p>
@@ -85,8 +95,8 @@ export default function SupportPage() {
                 </p>
               </div>
 
-              <div className="rounded-[24px] border border-white/10 bg-[rgba(255,255,255,0.04)] p-5">
-                <p className="text-sm font-medium text-foreground">Report an urgent safety concern</p>
+              <div className="rounded-[var(--bet-radius-lg)] border border-[color:var(--border-strong)] bg-[linear-gradient(180deg,rgba(17,197,198,0.06),rgba(18,38,34,0.96))] p-5">
+                <p className="text-sm font-semibold text-foreground">Report an urgent safety concern</p>
                 <p className="mt-3 text-sm leading-7 text-muted-foreground">
                   Email <a href={`mailto:${siteConfig.contact.supportEmail}`}>{siteConfig.contact.supportEmail}</a> with
                   the subject line &quot;Safety Report&quot; and include any relevant profile details,
@@ -95,8 +105,8 @@ export default function SupportPage() {
                 </p>
               </div>
 
-              <div className="rounded-[24px] border border-white/10 bg-[rgba(255,255,255,0.04)] p-5">
-                <p className="text-sm font-medium text-foreground">Delete your account</p>
+              <div className="rounded-[var(--bet-radius-lg)] border border-[color:var(--border-soft)] bg-[rgba(255,255,255,0.03)] p-5">
+                <p className="text-sm font-semibold text-foreground">Delete your account</p>
                 <p className="mt-3 text-sm leading-7 text-muted-foreground">
                   A public deletion page is available at <span className="text-foreground">/delete-account</span>.
                   In-app deletion remains the primary route where supported.
@@ -105,7 +115,7 @@ export default function SupportPage() {
             </CardContent>
           </Card>
         </div>
-      </section>
+      </SectionShell>
     </main>
   );
 }

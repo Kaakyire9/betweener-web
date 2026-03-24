@@ -22,7 +22,7 @@ export function StoreBadges({ className }: StoreBadgesProps) {
           </Link>
         </Button>
       </div>
-      <p className="mt-3 text-xs leading-6 text-muted-foreground">
+      <p className="mt-3 max-w-xl text-xs leading-6 text-muted-foreground">
         Replace these links with your live store URLs before launch. Official badge artwork can be
         dropped in later without changing the CTA structure.
       </p>

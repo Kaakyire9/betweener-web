@@ -51,13 +51,13 @@ export function StoryGrid() {
             <Card className="h-full min-h-[18rem]">
               <CardContent className="flex h-full flex-col justify-between gap-8">
                 <div className="space-y-4">
-                  <p className="text-xs uppercase tracking-[0.24em] text-accent">{story.note}</p>
+                  <p className="betweener-eyebrow">{story.note}</p>
                   <h3 className="max-w-xl font-display text-3xl leading-tight text-foreground sm:text-4xl">
                     {story.title}
                   </h3>
                   <p className="max-w-xl text-base leading-8 text-muted-foreground">{story.copy}</p>
                 </div>
-                <div className="soft-divider pt-5 text-sm text-foreground/80">
+                <div className="betweener-divider pt-5 text-sm text-[color:var(--text-secondary)]">
                   Thoughtful interface choices create calmer, more legible dating momentum.
                 </div>
               </CardContent>

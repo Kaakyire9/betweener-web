@@ -1,0 +1,23 @@
+<svg width="1280" height="320" viewBox="0 0 1280 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="320" rx="40" fill="#071311"/>
+  <rect x="24" y="24" width="272" height="272" rx="60" fill="url(#panel)" stroke="url(#border)" stroke-width="2"/>
+  <path d="M111 87H154.091C189.536 87 212.85 106.091 212.85 129.5C212.85 146.204 200.127 159.117 179.545 163.889C203.161 167.962 218.273 182.046 218.273 201.389C218.273 227.222 193.185 239.556 156.182 239.556H111V87ZM143.785 155.333H152.24C172.569 155.333 183.636 147.436 183.636 134.241C183.636 121.278 172.956 113.963 153.306 113.963H143.785V155.333ZM143.785 213.037H156.182C177.042 213.037 188.364 205.55 188.364 192.37C188.364 179.146 176.371 171.889 153.174 171.889H143.785V213.037Z" fill="url(#letter)"/>
+  <text x="342" y="146" fill="#F4EFE6" font-size="92" font-family="Georgia, 'Times New Roman', serif">Betweener</text>
+  <text x="344" y="202" fill="#B7C7C1" font-size="28" font-family="Arial, sans-serif" letter-spacing="4">INTENTIONAL DATING WITH DEPTH, TRUST, AND MOMENTUM</text>
+  <defs>
+    <linearGradient id="panel" x1="160" y1="24" x2="160" y2="296" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#17312C"/>
+      <stop offset="1" stop-color="#122622"/>
+    </linearGradient>
+    <linearGradient id="border" x1="56" y1="42" x2="266" y2="272" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E6D4B8" stop-opacity="0.8"/>
+      <stop offset="0.52" stop-color="#11C5C6" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#7ED6D1" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="letter" x1="164" y1="87" x2="164" y2="239.556" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5EBDD"/>
+      <stop offset="0.58" stop-color="#E6D4B8"/>
+      <stop offset="1" stop-color="#D6B25E"/>
+    </linearGradient>
+  </defs>
+</svg>

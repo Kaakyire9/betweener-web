@@ -15,10 +15,15 @@ export function LegalCallout({
   className
 }: LegalCalloutProps) {
   return (
-    <Card className={cn("border-amber-300/20 bg-[rgba(173,130,73,0.08)]", className)}>
+    <Card
+      className={cn(
+        "border-[color:var(--border-warm)] bg-[linear-gradient(180deg,rgba(230,212,184,0.08),rgba(18,38,34,0.96))] shadow-[var(--bet-glow-warm)]",
+        className
+      )}
+    >
       <CardContent className="space-y-3">
-        <p className="text-xs uppercase tracking-[0.28em] text-amber-200">{title}</p>
-        <div className="text-sm leading-7 text-amber-50/88">{children}</div>
+        <p className="betweener-eyebrow text-[color:var(--accent-warm)]">{title}</p>
+        <div className="text-sm leading-7 text-[color:var(--text-secondary)]">{children}</div>
       </CardContent>
     </Card>
   );

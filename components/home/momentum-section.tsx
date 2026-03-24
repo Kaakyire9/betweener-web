@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/motion/reveal";
 import { SectionIntro } from "@/components/common/section-intro";
+import { SectionShell } from "@/components/common/section-shell";
 import { Card, CardContent } from "@/components/ui/card";
 
 const rhythm = [
@@ -23,7 +24,7 @@ const rhythm = [
 
 export function MomentumSection() {
   return (
-    <section className="border-y border-white/8 bg-[rgba(255,255,255,0.02)]">
+    <SectionShell tone="elevated" border="y">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-[0.9fr_1.1fr] lg:px-8 lg:py-24">
         <Reveal>
           <SectionIntro
@@ -38,7 +39,9 @@ export function MomentumSection() {
             <Reveal key={item.step} delay={index * 0.08}>
               <Card>
                 <CardContent className="grid gap-4 md:grid-cols-[6rem_1fr] md:items-start">
-                  <div className="text-sm uppercase tracking-[0.28em] text-accent">{item.step}</div>
+                  <div className="font-support text-sm uppercase tracking-[0.28em] text-[color:var(--accent-soft)]">
+                    {item.step}
+                  </div>
                   <div>
                     <h3 className="font-display text-3xl text-foreground">{item.title}</h3>
                     <p className="mt-3 max-w-2xl text-base leading-8 text-muted-foreground">{item.copy}</p>
@@ -49,6 +52,6 @@ export function MomentumSection() {
           ))}
         </div>
       </div>
-    </section>
+    </SectionShell>
   );
 }

@@ -37,16 +37,19 @@ export function TrustSection() {
             <CardContent className="flex h-full flex-col justify-between gap-8">
               <div className="grid gap-5 md:grid-cols-3">
                 {trustPoints.map((item) => (
-                  <div key={item.title} className="rounded-[24px] border border-white/10 bg-black/12 p-5">
-                    <p className="text-sm font-medium text-foreground">{item.title}</p>
+                  <div
+                    key={item.title}
+                    className="rounded-[var(--bet-radius-lg)] border border-[color:var(--border-soft)] bg-[rgba(7,19,17,0.18)] p-5"
+                  >
+                    <p className="text-sm font-semibold text-foreground">{item.title}</p>
                     <p className="mt-3 text-sm leading-7 text-muted-foreground">{item.copy}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="rounded-[28px] border border-white/10 bg-[linear-gradient(135deg,rgba(201,166,117,0.12),rgba(117,134,153,0.08))] p-6">
-                <p className="text-xs uppercase tracking-[0.24em] text-accent">Marketplace ready</p>
-                <p className="mt-3 max-w-3xl text-lg leading-8 text-foreground/90">
+              <div className="rounded-[28px] border border-[color:var(--border-warm)] bg-[linear-gradient(135deg,rgba(230,212,184,0.08),rgba(17,197,198,0.04))] p-6">
+                <p className="betweener-eyebrow">Marketplace ready</p>
+                <p className="mt-3 max-w-3xl text-lg leading-8 text-[color:var(--text-primary)]">
                   Public support, privacy, terms, and account deletion routes are included from day
                   one so the site supports App Store Connect and Google Play review requirements.
                 </p>
@@ -59,7 +62,7 @@ export function TrustSection() {
           <Card className="h-full">
             <CardContent className="flex h-full flex-col justify-between gap-8">
               <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-accent">Need the policies?</p>
+                <p className="betweener-eyebrow">Need the policies?</p>
                 <h3 className="mt-4 font-display text-4xl leading-tight text-foreground">
                   Privacy, support, terms, safety, and deletion are part of the launch surface.
                 </h3>

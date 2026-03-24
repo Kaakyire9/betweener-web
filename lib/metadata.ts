@@ -10,6 +10,9 @@ type MetadataInput = {
   noIndex?: boolean;
 };
 
+const defaultOpenGraphImage = new URL("/opengraph-image", siteConfig.url).toString();
+const defaultTwitterImage = new URL("/twitter-image", siteConfig.url).toString();
+
 export function buildMetadata({
   title,
   description = siteConfig.description,
@@ -32,12 +35,21 @@ export function buildMetadata({
       url,
       siteName: siteConfig.name,
       locale: siteConfig.locale,
-      type: "website"
+      type: "website",
+      images: [
+        {
+          url: defaultOpenGraphImage,
+          width: 1200,
+          height: 630,
+          alt: "Betweener social preview"
+        }
+      ]
     },
     twitter: {
       card: "summary_large_image",
       title,
-      description
+      description,
+      images: [defaultTwitterImage]
     },
     keywords,
     robots: noIndex

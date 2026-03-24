@@ -7,7 +7,9 @@ import { StoryGrid } from "@/components/home/story-grid";
 import { TrustSection } from "@/components/home/trust-section";
 import { Reveal } from "@/components/motion/reveal";
 import { SectionIntro } from "@/components/common/section-intro";
+import { SectionShell } from "@/components/common/section-shell";
 import { StoreBadges } from "@/components/common/store-badges";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { buildMetadata } from "@/lib/metadata";
@@ -47,7 +49,9 @@ export default function HomePage() {
             <Card className="h-full">
               <CardContent className="grid h-full gap-6 md:grid-cols-2">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.24em] text-accent">Designed for</p>
+                  <Badge variant="warm" className="w-fit">
+                    Designed for
+                  </Badge>
                   <p className="mt-4 font-display text-3xl text-foreground">Meaningful connection</p>
                   <p className="mt-4 text-base leading-8 text-muted-foreground">
                     The product language, interaction rhythm, and trust surfaces all support the
@@ -55,7 +59,9 @@ export default function HomePage() {
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-[0.24em] text-accent">Built around</p>
+                  <Badge variant="trust" className="w-fit">
+                    Built around
+                  </Badge>
                   <div className="mt-4 space-y-4 text-sm leading-7 text-muted-foreground">
                     <p>Intentional discovery rather than swipe reflex.</p>
                     <p>Conversation that sounds human, not canned.</p>
@@ -68,10 +74,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="download" className="border-t border-white/8 bg-[rgba(255,255,255,0.02)]">
+      <SectionShell id="download" tone="elevated" border="top">
         <div className="mx-auto grid max-w-7xl gap-8 px-6 py-20 lg:grid-cols-[1fr_auto] lg:items-end lg:px-8">
           <Reveal>
-            <p className="text-xs uppercase tracking-[0.28em] text-accent">Download</p>
+            <p className="betweener-eyebrow">Download</p>
             <h2 className="mt-5 max-w-4xl font-display text-4xl leading-none text-foreground sm:text-5xl md:text-6xl">
               When dating feels calmer, clearer, and more intentional, the right momentum has room to happen.
             </h2>
@@ -98,7 +104,7 @@ export default function HomePage() {
             </div>
           </Reveal>
         </div>
-      </section>
+      </SectionShell>
     </main>
   );
 }
