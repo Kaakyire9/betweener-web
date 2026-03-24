@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+:root {
+  --background: #070a12;
+  --foreground: #f4efe7;
+  --muted-foreground: #b5b0a5;
+  --panel: #0d1320;
+  --panel-strong: #121a29;
+  --border: rgba(255, 255, 255, 0.1);
+  --accent: #e2c59a;
+  --accent-strong: #b78a56;
+}
+
+@theme inline {
+  --font-sans: var(--font-manrope);
+  --font-display: var(--font-cormorant);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-panel: var(--panel);
+  --color-panel-strong: var(--panel-strong);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(191, 150, 98, 0.13), transparent 36%),
+    radial-gradient(circle at 20% 20%, rgba(81, 94, 117, 0.16), transparent 26%),
+    linear-gradient(180deg, #0a0f18 0%, #070a12 48%, #090d15 100%);
+  color: var(--foreground);
+  font-family: var(--font-manrope), sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(226, 197, 154, 0.26);
+  color: var(--foreground);
+}
+
+.soft-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.policy-copy h2 {
+  margin-top: 3rem;
+  font-family: var(--font-cormorant), serif;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1;
+  color: var(--foreground);
+}
+
+.policy-copy h3 {
+  margin-top: 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.policy-copy p,
+.policy-copy li {
+  color: rgba(244, 239, 231, 0.82);
+  line-height: 1.95;
+}
+
+.policy-copy ul,
+.policy-copy ol {
+  margin-top: 1rem;
+  padding-left: 1.2rem;
+}
+
+.policy-copy li + li,
+.policy-copy p + p {
+  margin-top: 0.8rem;
+}
