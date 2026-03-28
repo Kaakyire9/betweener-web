@@ -24,10 +24,10 @@ export const siteConfig = {
     universal: "https://getbetweener.com/open"
   },
   legal: {
-    entityName: "[LEGAL REVIEW REQUIRED: Replace with your legal entity name]",
-    effectiveDate: "[LEGAL REVIEW REQUIRED: Replace with the publication date]",
-    address: "[LEGAL REVIEW REQUIRED: Replace with your company mailing address]",
-    jurisdiction: "[LEGAL REVIEW REQUIRED: Replace with governing law and venue]"
+    entityName: "Nyansapa Ltd",
+    effectiveDate: "March 25, 2026",
+    address: "428B Soundwell Road, Bristol, UK",
+    jurisdiction: "England and Wales"
   },
   social: {
     instagram: "https://instagram.com/betweenerapp"
