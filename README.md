@@ -59,4 +59,4 @@ npm run dev
 ## Notes
 
 - The site structure is designed to support future Supabase-backed forms without changing the page architecture.
-- All page metadata is centralized through `lib/metadata.ts`.
+- All page metadata is centralized through `lib/metadata.ts`.\n## Paystack Web Billing\nThis repo includes Paystack web checkout scaffolding and a Supabase webhook function for fixed-term web memberships.\nSee PAYSTACK_WEB.md for details.\n
