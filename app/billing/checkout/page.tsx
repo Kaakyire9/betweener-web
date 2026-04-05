@@ -90,7 +90,7 @@ export default function BillingCheckoutPage() {
           You need to be signed in to assign this membership to your account.
         </p>
         <div className="mt-6 w-full">
-          <Button className="w-full" variant="primary" asChild>
+          <Button className="w-full" variant="default" asChild>
             <a href={siteConfig.deepLinks.universal}>Open Betweener</a>
           </Button>
         </div>
@@ -107,7 +107,7 @@ export default function BillingCheckoutPage() {
       </p>
 
       <div className="mt-8 w-full">
-        <Button className="w-full" variant="primary" onClick={handleCheckout} disabled={status === "loading"}>
+        <Button className="w-full" variant="default" onClick={handleCheckout} disabled={status === "loading"}>
           {status === "loading" ? "Redirecting..." : "Continue to Paystack"}
         </Button>
         {status === "error" && errorMessage ? (

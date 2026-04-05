@@ -71,7 +71,7 @@ export default function BillingPage() {
             Web membership checkout requires a signed-in Betweener account so we can assign your plan.
           </p>
           <div className="mt-6">
-            <Button variant="primary" asChild>
+            <Button variant="default" asChild>
               <a href={siteConfig.deepLinks.universal}>Open Betweener</a>
             </Button>
           </div>
@@ -111,7 +111,7 @@ export default function BillingPage() {
                     href={`/billing/checkout?plan=${plan.type}&interval=${interval}`}
                     className="w-full"
                   >
-                    <Button className="w-full" variant="primary">
+                    <Button className="w-full" variant="default">
                       Continue with {interval}
                     </Button>
                   </Link>
