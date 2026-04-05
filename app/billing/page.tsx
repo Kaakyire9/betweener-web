@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { SectionShell } from "@/components/common/section-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/lib/site-config";
 
 const plans = [
   {
@@ -17,7 +21,65 @@ const plans = [
   }
 ] as const;
 
+type AuthState = "loading" | "authed" | "unauth";
+
 export default function BillingPage() {
+  const [authState, setAuthState] = useState<AuthState>("loading");
+
+  useEffect(() => {
+    let isMounted = true;
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/billing/me");
+        if (!isMounted) return;
+        if (res.status === 401) {
+          setAuthState("unauth");
+          return;
+        }
+        setAuthState(res.ok ? "authed" : "unauth");
+      } catch {
+        if (isMounted) setAuthState("unauth");
+      }
+    };
+    void checkAuth();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (authState === "loading") {
+    return (
+      <main>
+        <SectionShell className="mx-auto max-w-2xl px-6 py-20 text-center">
+          <Badge>Web Membership</Badge>
+          <h1 className="mt-4 font-display text-3xl text-foreground">Checking your access</h1>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Please wait while we confirm your Betweener session.
+          </p>
+        </SectionShell>
+      </main>
+    );
+  }
+
+  if (authState === "unauth") {
+    return (
+      <main>
+        <SectionShell className="mx-auto max-w-2xl px-6 py-20 text-center">
+          <Badge>Sign in required</Badge>
+          <h1 className="mt-4 font-display text-3xl text-foreground">Open Betweener to continue</h1>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Web membership checkout requires a signed-in Betweener account so we can assign your plan.
+          </p>
+          <div className="mt-6">
+            <Button variant="primary" asChild>
+              <a href={siteConfig.deepLinks.universal}>Open Betweener</a>
+            </Button>
+          </div>
+        </SectionShell>
+      </main>
+    );
+  }
+
   return (
     <main>
       <SectionShell className="mx-auto max-w-5xl px-6 py-16 lg:px-8 lg:py-20">

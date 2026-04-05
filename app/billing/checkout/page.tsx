@@ -1,10 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { siteConfig } from "@/lib/site-config";
+
+type AuthState = "loading" | "authed" | "unauth";
 
 export default function BillingCheckoutPage() {
   const searchParams = useSearchParams();
@@ -12,8 +15,30 @@ export default function BillingCheckoutPage() {
   const interval = searchParams.get("interval") ?? "monthly";
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [authState, setAuthState] = useState<AuthState>("loading");
 
   const label = useMemo(() => `${plan} ${interval}`, [plan, interval]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/billing/me");
+        if (!isMounted) return;
+        if (res.status === 401) {
+          setAuthState("unauth");
+          return;
+        }
+        setAuthState(res.ok ? "authed" : "unauth");
+      } catch {
+        if (isMounted) setAuthState("unauth");
+      }
+    };
+    void checkAuth();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleCheckout = async () => {
     setStatus("loading");
@@ -43,6 +68,35 @@ export default function BillingCheckoutPage() {
       setErrorMessage(error instanceof Error ? error.message : "Unexpected error");
     }
   };
+
+  if (authState === "loading") {
+    return (
+      <main className="mx-auto flex min-h-[70vh] max-w-2xl flex-col items-center justify-center px-6 py-16 text-center">
+        <Badge>Secure Checkout</Badge>
+        <h1 className="mt-4 font-display text-3xl text-foreground">Checking your session</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Please wait while we confirm your Betweener account.
+        </p>
+      </main>
+    );
+  }
+
+  if (authState === "unauth") {
+    return (
+      <main className="mx-auto flex min-h-[70vh] max-w-2xl flex-col items-center justify-center px-6 py-16 text-center">
+        <Badge>Sign in required</Badge>
+        <h1 className="mt-4 font-display text-3xl text-foreground">Open Betweener to continue</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
+          You need to be signed in to assign this membership to your account.
+        </p>
+        <div className="mt-6 w-full">
+          <Button className="w-full" variant="primary" asChild>
+            <a href={siteConfig.deepLinks.universal}>Open Betweener</a>
+          </Button>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto flex min-h-[70vh] max-w-2xl flex-col items-center justify-center px-6 py-16 text-center">
