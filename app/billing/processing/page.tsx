@@ -50,7 +50,7 @@ export default function BillingProcessingPage() {
 
       {status === "verified" ? (
         <div className="mt-6 w-full">
-          <Button className="w-full" variant="primary" asChild>
+          <Button className="w-full" variant="default" asChild>
             <a href={siteConfig.deepLinks.universal}>Open Betweener</a>
           </Button>
         </div>
