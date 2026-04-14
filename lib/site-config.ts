@@ -42,6 +42,7 @@ export const siteConfig = {
     { href: "/", label: "Home" },
     { href: "/privacy", label: "Privacy" },
     { href: "/terms", label: "Terms" },
+    { href: "/cookies", label: "Cookies" },
     { href: "/support", label: "Support" },
     { href: "/delete-account", label: "Delete Account" },
     { href: "/safety", label: "Safety" },
