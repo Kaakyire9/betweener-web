@@ -24,6 +24,21 @@ body {
 a {
   text-decoration: none;
 }
+.legal-callout-copy a,
+.policy-copy a {
+  color: var(--accent-primary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(126, 214, 209, 0.68);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+.legal-callout-copy a:hover,
+.policy-copy a:hover {
+  color: var(--accent-primary-hover);
+  text-decoration-color: currentColor;
+}
 
 ::selection {
   background: rgba(17, 197, 198, 0.26);

@@ -23,7 +23,7 @@ export function LegalCallout({
     >
       <CardContent className="space-y-3">
         <p className="betweener-eyebrow text-[color:var(--accent-warm)]">{title}</p>
-        <div className="text-sm leading-7 text-[color:var(--text-secondary)]">{children}</div>
+        <div className="legal-callout-copy text-sm leading-7 text-[color:var(--text-secondary)]">{children}</div>
       </CardContent>
     </Card>
   );
