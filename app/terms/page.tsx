@@ -31,6 +31,12 @@ export default function TermsPage() {
             By accessing or using Betweener, you agree to these Terms and to our Privacy Policy. If you do
             not agree, do not use the service.
           </p>
+          <p>
+            For users who download Betweener through the Apple App Store, these Terms supplement{" "}
+            <a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">
+              Apple&apos;s Standard Licensed Application End User License Agreement
+            </a>, which also applies to your use of the app.
+          </p>
         </LegalCallout>
 
         <Card>
