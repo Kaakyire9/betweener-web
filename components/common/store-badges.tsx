@@ -23,8 +23,8 @@ export function StoreBadges({ className }: StoreBadgesProps) {
         </Button>
       </div>
       <p className="mt-3 max-w-xl text-xs leading-6 text-muted-foreground">
-        Replace these links with your live store URLs before launch. Official badge artwork can be
-        dropped in later without changing the CTA structure.
+        Public store links will be added when Betweener is live. App Review can use the submitted
+        build and in-app purchase products in App Store Connect.
       </p>
     </div>
   );

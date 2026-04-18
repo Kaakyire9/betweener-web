@@ -16,11 +16,11 @@ export const siteConfig = {
     responseWindow: "Most support requests receive a response within 2 business days."
   },
   stores: {
-    appStore: "https://apps.apple.com/app/idREPLACE_WITH_APP_STORE_ID",
-    playStore: "https://play.google.com/store/apps/details?id=REPLACE_WITH_ANDROID_PACKAGE"
+    appStore: "https://getbetweener.com/download",
+    playStore: "https://getbetweener.com/download"
   },
   deepLinks: {
-    scheme: "betweener://",
+    scheme: "betweenerapp://",
     universal: "https://getbetweener.com/open"
   },
   legal: {

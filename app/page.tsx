@@ -82,8 +82,8 @@ export default function HomePage() {
               When dating feels calmer, clearer, and more intentional, the right momentum has room to happen.
             </h2>
             <p className="mt-5 max-w-2xl text-base leading-8 text-muted-foreground md:text-lg">
-              Explore Betweener on the App Store and Google Play, then use the support and policy
-              pages below for anything operational, legal, or account-related.
+              Betweener is preparing for public release. Use the support and policy pages below for
+              anything operational, legal, or account-related.
             </p>
           </Reveal>
 
