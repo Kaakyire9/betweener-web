@@ -30,3 +30,14 @@ export function createUserClient(accessToken: string) {
     }
   });
 }
+export function createAnonClient() {
+  const url = requireEnv("SUPABASE_URL");
+  const anonKey = requireEnv("SUPABASE_ANON_KEY");
+
+  return createClient(url, anonKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false
+    }
+  });
+}

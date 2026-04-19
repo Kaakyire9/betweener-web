@@ -7,6 +7,9 @@ export async function getAccessToken() {
   }
 
   const cookieStore = await cookies();
+  const adminToken = cookieStore.get("bt-admin-access-token")?.value;
+  if (adminToken) return adminToken;
+
   const directToken = cookieStore.get("sb-access-token")?.value;
   if (directToken) return directToken;
 

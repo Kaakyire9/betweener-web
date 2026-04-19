@@ -2,8 +2,7 @@ import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 import { Archivo, Manrope, Playfair_Display } from "next/font/google";
 
-import { SiteFooter } from "@/components/common/site-footer";
-import { SiteHeader } from "@/components/common/site-header";
+import { SiteShell } from "@/components/common/site-shell";
 import { buildMetadata } from "@/lib/metadata";
 
 import "./globals.css";
@@ -50,9 +49,7 @@ export default function RootLayout({
       <body className="bg-background text-foreground antialiased" suppressHydrationWarning>
         <div className="relative isolate min-h-screen">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(245,235,221,0.06),transparent_38%)]" />
-          <SiteHeader />
-          {children}
-          <SiteFooter />
+          <SiteShell>{children}</SiteShell>
         </div>
       </body>
     </html>
