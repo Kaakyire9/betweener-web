@@ -11,6 +11,7 @@ export const siteConfig = {
     supportEmail: "support@getbetweener.com",
     privacyEmail: "privacy@getbetweener.com",
     legalEmail: "legal@getbetweener.com",
+    childSafetyEmail: "hello@getbetweener.com",
     partnershipsEmail: "hello@getbetweener.com",
     supportHours: "Monday to Friday, 09:00 to 18:00 GMT",
     responseWindow: "Most support requests receive a response within 2 business days."
@@ -41,6 +42,7 @@ export const siteConfig = {
   footerNavigation: [
     { href: "/", label: "Home" },
     { href: "/privacy", label: "Privacy" },
+    { href: "/child-safety", label: "Child Safety" },
     { href: "/terms", label: "Terms" },
     { href: "/cookies", label: "Cookies" },
     { href: "/support", label: "Support" },

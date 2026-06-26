@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { LegalCallout } from "@/components/common/legal-callout";
 import { PageHero } from "@/components/common/page-hero";
@@ -126,6 +127,11 @@ export default function PrivacyPage() {
               <p>
                 Betweener is not intended for children and is only available to users who meet the
                 minimum age required by applicable law and our Terms of Service.
+              </p>
+              <p>
+                For more information about our standards against child sexual abuse and
+                exploitation, see our <Link href="/child-safety">Child Safety Standards</Link>{" "}
+                page.
               </p>
 
               <h2>10. Contact</h2>
