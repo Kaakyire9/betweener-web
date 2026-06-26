@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { CirclesAdminSection, GatheringsAdminSection, RelationshipGistAdminSection, WarmIntroductionsAdminSection } from "@/app/admin/circles-admin-sections";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,9 +13,13 @@ import type {
   AccountRecoveryRequestRow,
   AdminDashboardPayload,
   AdminOverview,
+  CircleAdminRow,
   DatePlanConciergeRow,
+  GatheringAdminRow,
+  RelationshipGistAdminRow,
   ReportRow,
-  VerificationRow
+  VerificationRow,
+  WarmIntroductionAdminRow
 } from "@/lib/admin/types";
 
 const EMPTY_OVERVIEW: AdminOverview = {
@@ -35,6 +40,10 @@ const EMPTY_DASHBOARD: AdminDashboardPayload = {
   conciergeRequests: [],
   recoveryRequests: [],
   mergeCases: [],
+  circles: [],
+  gatherings: [],
+  relationshipGists: [],
+  warmIntroductions: [],
   moduleWarnings: []
 };
 
@@ -42,12 +51,12 @@ const POLL_INTERVAL_MS = 60_000;
 const VIDEO_EXTENSIONS = [".mp4", ".mov", ".m4v", ".webm", ".avi"];
 
 type AdminState = "checking" | "signed_out" | "signed_in" | "forbidden";
-type AdminTab = "verification" | "reports" | "concierge" | "recovery_requests" | "merges";
+type AdminTab = "verification" | "reports" | "concierge" | "recovery_requests" | "merges" | "circles" | "gatherings" | "gists" | "warm_intros";
 type ReportFilter = "open" | "all";
 type ReportSeverity = "urgent" | "high" | "standard";
 
 type AdminUser = { id: string; email: string | null };
-type QueueCounts = { pendingVerifications: number; openReports: number; openConcierge: number; openRecovery: number; openMerges: number };
+type QueueCounts = { pendingVerifications: number; openReports: number; openConcierge: number; openRecovery: number; openMerges: number; pendingCircles: number; pendingGatherings: number; pendingWarmIntros: number };
 type AdminNotice = { title: string; body: string } | null;
 
 const formatDate = (value?: string | null) => {
@@ -81,6 +90,9 @@ const isOpenReport = (item: ReportRow) => ["PENDING", "REVIEWING"].includes(Stri
 const isOpenConcierge = (item: DatePlanConciergeRow) => ["pending", "claimed"].includes(String(item.request_status || "").toLowerCase());
 const isOpenRecovery = (item: AccountRecoveryRequestRow) => ["pending", "reviewing"].includes(String(item.status || "").toLowerCase());
 const isOpenMerge = (item: AccountMergeCaseRow) => ["pending", "reviewing", "approved", "scheduled"].includes(String(item.status || "").toLowerCase());
+const isPendingCircle = (item: CircleAdminRow) => String(item.status || "").toLowerCase() === "pending_review";
+const isPendingGathering = (item: GatheringAdminRow) => String(item.status || "").toLowerCase() === "pending_review";
+const isPendingWarmIntro = (item: WarmIntroductionAdminRow) => ["pending", "accepted_by_a", "accepted_by_b"].includes(String(item.status || "").toLowerCase());
 const shortId = (value?: string | null) => (value ? value.slice(0, 8) : "unknown");
 const reportIdentityLabel = (role: "reporter" | "member", name?: string | null, profileId?: string | null, userId?: string | null) => {
   const cleanName = name?.trim();
@@ -145,7 +157,10 @@ const getQueueCounts = (payload: AdminDashboardPayload): QueueCounts => ({
   openReports: payload.reports.filter(isOpenReport).length,
   openConcierge: payload.conciergeRequests.filter(isOpenConcierge).length,
   openRecovery: payload.recoveryRequests.filter(isOpenRecovery).length,
-  openMerges: payload.mergeCases.filter(isOpenMerge).length
+  openMerges: payload.mergeCases.filter(isOpenMerge).length,
+  pendingCircles: payload.circles.filter(isPendingCircle).length,
+  pendingGatherings: payload.gatherings.filter(isPendingGathering).length,
+  pendingWarmIntros: payload.warmIntroductions.filter(isPendingWarmIntro).length
 });
 
 export function AdminClient() {
@@ -182,6 +197,9 @@ export function AdminClient() {
   const openConciergeRequests = useMemo(() => dashboard.conciergeRequests.filter(isOpenConcierge), [dashboard.conciergeRequests]);
   const openRecoveryRequests = useMemo(() => dashboard.recoveryRequests.filter(isOpenRecovery), [dashboard.recoveryRequests]);
   const openMergeCases = useMemo(() => dashboard.mergeCases.filter(isOpenMerge), [dashboard.mergeCases]);
+  const pendingCircles = useMemo(() => dashboard.circles.filter(isPendingCircle), [dashboard.circles]);
+  const pendingGatherings = useMemo(() => dashboard.gatherings.filter(isPendingGathering), [dashboard.gatherings]);
+  const pendingWarmIntroductions = useMemo(() => dashboard.warmIntroductions.filter(isPendingWarmIntro), [dashboard.warmIntroductions]);
 
   const addSessionActivity = useCallback((message: string) => {
     setSessionActivity((prev) => [`${formatTime(new Date())} - ${message}`, ...prev].slice(0, 6));
@@ -211,6 +229,10 @@ export function AdminClient() {
         conciergeRequests: raw.conciergeRequests || [],
         recoveryRequests: raw.recoveryRequests || [],
         mergeCases: raw.mergeCases || [],
+        circles: raw.circles || [],
+        gatherings: raw.gatherings || [],
+        relationshipGists: raw.relationshipGists || [],
+        warmIntroductions: raw.warmIntroductions || [],
         moduleWarnings: raw.moduleWarnings || []
       };
       const nextCounts = getQueueCounts(data);
@@ -223,7 +245,10 @@ export function AdminClient() {
           { title: "New verification request", count: nextCounts.pendingVerifications - previousCounts.pendingVerifications },
           { title: "New concierge request", count: nextCounts.openConcierge - previousCounts.openConcierge },
           { title: "New recovery request", count: nextCounts.openRecovery - previousCounts.openRecovery },
-          { title: "New merge case", count: nextCounts.openMerges - previousCounts.openMerges }
+          { title: "New merge case", count: nextCounts.openMerges - previousCounts.openMerges },
+          { title: "New Circle request", count: nextCounts.pendingCircles - previousCounts.pendingCircles },
+          { title: "New Gathering request", count: nextCounts.pendingGatherings - previousCounts.pendingGatherings },
+          { title: "Warm Introduction waiting", count: nextCounts.pendingWarmIntros - previousCounts.pendingWarmIntros }
         ];
         const firstDelta = deltas.find((item) => item.count > 0);
         if (firstDelta) sendQueueAlert(firstDelta.title, `${firstDelta.count} item${firstDelta.count === 1 ? "" : "s"} need review.`);
@@ -365,6 +390,25 @@ export function AdminClient() {
     return updateStatus("/api/admin/merge/status", item.id, { case_id: item.id, status, notes: notesById[item.id] || item.notes || null }, `Marked merge ${shortId(item.id)} as ${status}`);
   };
 
+  const createAdminCircle = (payload: Record<string, unknown>) =>
+    updateStatus("/api/admin/circles/create", "circle:create", payload, "Created Circle");
+  const reviewCircle = (item: CircleAdminRow, decision: "approve" | "reject") => {
+    if (decision === "reject" && !window.confirm(`Reject Circle ${item.name}?`)) return;
+    return updateStatus("/api/admin/circles/review", item.id, { circle_id: item.id, decision, reason: notesById[item.id] || null }, `${decision === "approve" ? "Approved" : "Rejected"} Circle ${item.name}`);
+  };
+  const createAdminGathering = (payload: Record<string, unknown>) =>
+    updateStatus("/api/admin/gatherings/create", "gathering:create", payload, "Created Gathering");
+  const reviewGathering = (item: GatheringAdminRow, decision: "approve" | "reject") => {
+    if (decision === "reject" && !window.confirm(`Reject Gathering ${item.title}?`)) return;
+    return updateStatus("/api/admin/gatherings/review", item.id, { gathering_id: item.id, decision, reason: notesById[item.id] || null }, `${decision === "approve" ? "Approved" : "Rejected"} Gathering ${item.title}`);
+  };
+  const createRelationshipGist = (payload: Record<string, unknown>) =>
+    updateStatus("/api/admin/gists/create", "gist:create", payload, "Created Relationship Gist");
+  const publishRelationshipGist = (item: RelationshipGistAdminRow) =>
+    updateStatus("/api/admin/gists/publish", item.id, { gist_id: item.id }, `Published Relationship Gist ${item.title}`);
+  const createWarmIntroduction = (payload: Record<string, unknown>) =>
+    updateStatus("/api/admin/warm-introductions/create", "warm:create", payload, "Created Warm Introduction");
+
   const previewMerge = async (item: AccountMergeCaseRow) => {
     setBusyId(item.id);
     setError(null);
@@ -413,6 +457,9 @@ export function AdminClient() {
     { key: "concierge" as const, label: "Date concierge", value: openConciergeRequests.length, helper: "Planning help queue" },
     { key: "recovery_requests" as const, label: "Recovery requests", value: openRecoveryRequests.length, helper: "User support queue" },
     { key: "merges" as const, label: "Merge cases", value: openMergeCases.length, helper: "Recovery execution" },
+    { key: "circles" as const, label: "Circle requests", value: pendingCircles.length, helper: "Curated community review" },
+    { key: "gatherings" as const, label: "Gatherings", value: pendingGatherings.length, helper: "Events awaiting approval" },
+    { key: "warm_intros" as const, label: "Warm intros", value: pendingWarmIntroductions.length, helper: "Curated connections" },
     { key: "verification" as const, label: "Members", value: overview.members_total, helper: `${overview.members_last_7d} joined in 7 days` },
     { key: "reports" as const, label: "Unread rejections", value: overview.rejected_unread, helper: "Follow-up needed" }
   ];
@@ -421,7 +468,11 @@ export function AdminClient() {
     { key: "reports" as const, title: "Moderation queue", subtitle: `${activeReports.length} active`, detail: activeReports.length > 0 ? "Move reports from pending to resolved." : "No active moderation reports." },
     { key: "concierge" as const, title: "Date concierge", subtitle: `${openConciergeRequests.length} open`, detail: openConciergeRequests.length > 0 ? "Check who needs planning help next." : "No open concierge requests." },
     { key: "recovery_requests" as const, title: "Recovery requests", subtitle: `${openRecoveryRequests.length} open`, detail: openRecoveryRequests.length > 0 ? "Triage user-submitted account access issues." : "No open recovery requests." },
-    { key: "merges" as const, title: "Merge cases", subtitle: `${openMergeCases.length} open`, detail: openMergeCases.length > 0 ? "Review duplicate-account merge cases." : "No open account recovery cases." }
+    { key: "merges" as const, title: "Merge cases", subtitle: `${openMergeCases.length} open`, detail: openMergeCases.length > 0 ? "Review duplicate-account merge cases." : "No open account recovery cases." },
+    { key: "circles" as const, title: "Circles Admin", subtitle: `${pendingCircles.length} pending`, detail: pendingCircles.length > 0 ? "Approve Gold community submissions." : "Create official and partner Circles." },
+    { key: "gatherings" as const, title: "Gatherings Admin", subtitle: `${pendingGatherings.length} pending`, detail: pendingGatherings.length > 0 ? "Approve safe event discovery." : "Create official Gatherings." },
+    { key: "gists" as const, title: "Relationship Gist", subtitle: `${dashboard.relationshipGists.length} items`, detail: "Publish respectful guidance cards by audience." },
+    { key: "warm_intros" as const, title: "Warm Introductions", subtitle: `${pendingWarmIntroductions.length} open`, detail: "Send trusted host/admin introductions." }
   ];
 
   return (
@@ -429,12 +480,27 @@ export function AdminClient() {
       <div className="flex flex-col gap-4 border-b border-[color:var(--border-soft)] pb-8 md:flex-row md:items-end md:justify-between"><div><Badge variant="trust">Restricted Operations</Badge><h1 className="mt-4 font-display text-5xl leading-none text-foreground md:text-7xl">Admin dashboard</h1><p className="mt-4 max-w-3xl text-sm leading-7 text-muted-foreground">Review verification submissions, reports, concierge requests, and account recovery queues. Signed in as {user?.email || "admin"}.</p><p className="mt-2 text-xs uppercase tracking-[0.16em] text-muted-foreground">Last refreshed {formatTime(lastRefreshedAt)} - Auto-checking every 60 seconds</p></div><div className="flex flex-wrap gap-3">{alertsSupported ? <Button variant="secondary" onClick={() => void handleEnableAlerts()}>{alertsEnabled ? "Alerts enabled" : "Enable alerts"}</Button> : null}<Button variant="secondary" onClick={() => void loadDashboard({ notify: true })} disabled={loadingDashboard}>{loadingDashboard ? "Refreshing..." : "Refresh"}</Button><Button variant="ghost" onClick={() => void handleLogout()}>Sign out</Button></div></div>
       {adminNotice ? <div className="mt-6 flex flex-col gap-3 rounded-[var(--bet-radius-lg)] border border-[rgba(126,214,209,0.24)] bg-[rgba(17,197,198,0.09)] p-4 text-sm leading-7 text-[color:var(--accent-soft)] sm:flex-row sm:items-center sm:justify-between"><div><p className="font-semibold text-foreground">{adminNotice.title}</p><p>{adminNotice.body}</p></div><Button variant="ghost" onClick={() => setAdminNotice(null)}>Dismiss</Button></div> : null}
       {error ? <div className="mt-6 rounded-[var(--bet-radius-md)] border border-red-400/30 bg-red-500/10 p-4 text-sm leading-7 text-red-200">{error}</div> : null}
+      <section className="mt-6 rounded-[var(--bet-radius-lg)] border border-[rgba(126,214,209,0.24)] bg-[rgba(17,197,198,0.08)] p-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <Badge variant="trust">Circles 2.0</Badge>
+            <h2 className="mt-3 font-display text-3xl text-foreground">Community admin</h2>
+            <p className="mt-2 text-sm leading-7 text-muted-foreground">Create official Circles, approve Gatherings, publish Relationship Gist, and send Warm Introductions.</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Button variant={activeTab === "circles" ? "default" : "secondary"} onClick={() => setActiveTab("circles")}>Circles ({pendingCircles.length})</Button>
+            <Button variant={activeTab === "gatherings" ? "default" : "secondary"} onClick={() => setActiveTab("gatherings")}>Gatherings ({pendingGatherings.length})</Button>
+            <Button variant={activeTab === "gists" ? "default" : "secondary"} onClick={() => setActiveTab("gists")}>Relationship Gist</Button>
+            <Button variant={activeTab === "warm_intros" ? "default" : "secondary"} onClick={() => setActiveTab("warm_intros")}>Warm Intros ({pendingWarmIntroductions.length})</Button>
+          </div>
+        </div>
+      </section>
       <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">{metricCards.map((item) => <button key={item.label} type="button" className="text-left" onClick={() => setActiveTab(item.key)}><Card className="h-full transition hover:border-[color:var(--border-strong)]"><CardContent className="p-5"><p className="font-support text-[11px] uppercase tracking-[0.16em] text-muted-foreground">{item.label}</p><p className="mt-3 font-display text-4xl text-foreground">{item.value}</p><p className="mt-2 text-xs leading-6 text-muted-foreground">{item.helper}</p></CardContent></Card></button>)}</section>
       <section className="mt-8 grid gap-4 lg:grid-cols-[1.35fr_0.65fr]"><Card><CardContent><h2 className="font-display text-3xl text-foreground">Operations</h2><div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-5">{operationCards.map((card) => <button key={card.key} type="button" className="text-left" onClick={() => setActiveTab(card.key)}><div className={`h-full rounded-[var(--bet-radius-md)] border p-4 transition ${activeTab === card.key ? "border-[rgba(126,214,209,0.42)] bg-[rgba(17,197,198,0.1)]" : "border-[color:var(--border-soft)] bg-black/10"}`}><p className="font-semibold text-foreground">{card.title}</p><p className="mt-2 text-sm text-[color:var(--accent-soft)]">{card.subtitle}</p><p className="mt-2 text-xs leading-6 text-muted-foreground">{card.detail}</p></div></button>)}</div></CardContent></Card><Card><CardContent><h2 className="font-display text-3xl text-foreground">Revenue and member health</h2><div className="mt-5 grid grid-cols-2 gap-3"><StatPill label="Silver" value={overview.silver_active} /><StatPill label="Gold" value={overview.gold_active} /><StatPill label="Active subscriptions" value={overview.active_subscriptions} /><StatPill label="New in 7 days" value={overview.members_last_7d} /></div></CardContent></Card></section>
       {dashboard.moduleWarnings.length > 0 ? <Card className="mt-6"><CardContent className="p-5"><p className="font-support text-[11px] uppercase tracking-[0.16em] text-muted-foreground">Module status</p><div className="mt-3 space-y-2">{dashboard.moduleWarnings.map((warning) => <p key={warning} className="text-sm leading-7 text-[color:var(--accent-warm)]">{warning}</p>)}</div></CardContent></Card> : null}
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-4"><div className="flex flex-wrap gap-3">{[{ key: "verification", label: `Verification (${pendingVerifications.length})` }, { key: "reports", label: `Reports (${activeReports.length})` }, { key: "concierge", label: `Concierge (${openConciergeRequests.length})` }, { key: "recovery_requests", label: `Requests (${openRecoveryRequests.length})` }, { key: "merges", label: `Recovery (${openMergeCases.length})` }].map((tab) => <Button key={tab.key} variant={activeTab === tab.key ? "default" : "secondary"} onClick={() => setActiveTab(tab.key as AdminTab)}>{tab.label}</Button>)}</div>{activeTab === "reports" ? <div className="flex flex-wrap gap-2 rounded-[var(--bet-radius-lg)] border border-[color:var(--border-soft)] bg-black/10 p-1"><Button size="sm" variant={reportFilter === "open" ? "default" : "ghost"} onClick={() => setReportFilter("open")}>Open ({activeReports.length})</Button><Button size="sm" variant={reportFilter === "all" ? "default" : "ghost"} onClick={() => setReportFilter("all")}>All ({sortedReports.length})</Button></div> : null}</div>
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-4"><div className="flex flex-wrap gap-3">{[{ key: "verification", label: `Verification (${pendingVerifications.length})` }, { key: "reports", label: `Reports (${activeReports.length})` }, { key: "concierge", label: `Concierge (${openConciergeRequests.length})` }, { key: "recovery_requests", label: `Requests (${openRecoveryRequests.length})` }, { key: "merges", label: `Recovery (${openMergeCases.length})` }, { key: "circles", label: `Circles (${pendingCircles.length})` }, { key: "gatherings", label: `Gatherings (${pendingGatherings.length})` }, { key: "gists", label: `Gist (${dashboard.relationshipGists.length})` }, { key: "warm_intros", label: `Warm Intro (${pendingWarmIntroductions.length})` }].map((tab) => <Button key={tab.key} variant={activeTab === tab.key ? "default" : "secondary"} onClick={() => setActiveTab(tab.key as AdminTab)}>{tab.label}</Button>)}</div>{activeTab === "reports" ? <div className="flex flex-wrap gap-2 rounded-[var(--bet-radius-lg)] border border-[color:var(--border-soft)] bg-black/10 p-1"><Button size="sm" variant={reportFilter === "open" ? "default" : "ghost"} onClick={() => setReportFilter("open")}>Open ({activeReports.length})</Button><Button size="sm" variant={reportFilter === "all" ? "default" : "ghost"} onClick={() => setReportFilter("all")}>All ({sortedReports.length})</Button></div> : null}</div>
       {sessionActivity.length > 0 ? <section className="mt-6 rounded-[var(--bet-radius-lg)] border border-[color:var(--border-soft)] bg-[rgba(255,255,255,0.03)] p-4"><p className="font-support text-[11px] uppercase tracking-[0.16em] text-muted-foreground">This session</p><div className="mt-3 flex flex-wrap gap-2">{sessionActivity.map((item) => <span key={item} className="rounded-full border border-[color:var(--border-soft)] px-3 py-1 text-xs text-muted-foreground">{item}</span>)}</div></section> : null}
-      {activeTab === "verification" ? <VerificationQueue rows={dashboard.verifications} busyId={busyId} notesById={notesById} setNotesById={setNotesById} onReview={reviewVerification} onFreshReview={updateFreshReview} /> : activeTab === "reports" ? <ReportsQueue rows={visibleReports} filter={reportFilter} busyId={busyId} onStatus={updateReportStatus} /> : activeTab === "concierge" ? <ConciergeQueue rows={dashboard.conciergeRequests} busyId={busyId} onStatus={updateConciergeStatus} /> : activeTab === "recovery_requests" ? <RecoveryQueue rows={dashboard.recoveryRequests} reviewingCount={recoveryReviewingCount} resolvedCount={recoveryResolvedCount} busyId={busyId} notesById={notesById} setNotesById={setNotesById} onStatus={updateRecoveryStatus} /> : <MergeQueue rows={dashboard.mergeCases} reviewingCount={mergeReviewingCount} approvedCount={mergeApprovedCount} failedCount={mergeFailedCount} busyId={busyId} notesById={notesById} setNotesById={setNotesById} onStatus={updateMergeStatus} onPreflight={previewMerge} />}
+      {activeTab === "verification" ? <VerificationQueue rows={dashboard.verifications} busyId={busyId} notesById={notesById} setNotesById={setNotesById} onReview={reviewVerification} onFreshReview={updateFreshReview} /> : activeTab === "reports" ? <ReportsQueue rows={visibleReports} filter={reportFilter} busyId={busyId} onStatus={updateReportStatus} /> : activeTab === "concierge" ? <ConciergeQueue rows={dashboard.conciergeRequests} busyId={busyId} onStatus={updateConciergeStatus} /> : activeTab === "recovery_requests" ? <RecoveryQueue rows={dashboard.recoveryRequests} reviewingCount={recoveryReviewingCount} resolvedCount={recoveryResolvedCount} busyId={busyId} notesById={notesById} setNotesById={setNotesById} onStatus={updateRecoveryStatus} /> : activeTab === "merges" ? <MergeQueue rows={dashboard.mergeCases} reviewingCount={mergeReviewingCount} approvedCount={mergeApprovedCount} failedCount={mergeFailedCount} busyId={busyId} notesById={notesById} setNotesById={setNotesById} onStatus={updateMergeStatus} onPreflight={previewMerge} /> : activeTab === "circles" ? <CirclesAdminSection rows={dashboard.circles} busyId={busyId} notesById={notesById} setNotesById={setNotesById} onCreate={createAdminCircle} onReview={reviewCircle} /> : activeTab === "gatherings" ? <GatheringsAdminSection rows={dashboard.gatherings} circles={dashboard.circles} busyId={busyId} notesById={notesById} setNotesById={setNotesById} onCreate={createAdminGathering} onReview={reviewGathering} /> : activeTab === "gists" ? <RelationshipGistAdminSection rows={dashboard.relationshipGists} busyId={busyId} onCreate={createRelationshipGist} onPublish={publishRelationshipGist} /> : <WarmIntroductionsAdminSection rows={dashboard.warmIntroductions} circles={dashboard.circles} busyId={busyId} onCreate={createWarmIntroduction} />}
       {preflight ? <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"><Card className="max-h-[86vh] w-full max-w-3xl overflow-hidden"><CardContent><div className="flex items-start justify-between gap-4"><div><Badge variant="trust">Merge preflight</Badge><h2 className="mt-3 font-display text-3xl text-foreground">Reference preview</h2></div><Button variant="ghost" onClick={() => setPreflight(null)}>Close</Button></div><pre className="mt-5 max-h-[58vh] overflow-auto rounded-[var(--bet-radius-md)] border border-[color:var(--border-soft)] bg-black/25 p-4 text-xs leading-6 text-muted-foreground">{JSON.stringify(preflight, null, 2)}</pre></CardContent></Card></div> : null}
     </main>
   );

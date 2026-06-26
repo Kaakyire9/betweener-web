@@ -124,6 +124,109 @@ export type AccountMergeCaseRow = {
   notes: string | null;
 };
 
+export type CircleAdminRow = {
+  id: string;
+  name: string;
+  slug: string | null;
+  description: string | null;
+  short_description: string | null;
+  circle_type: string;
+  status: string;
+  visibility_scope: string;
+  country_code: string | null;
+  country_name: string | null;
+  region: string | null;
+  city: string | null;
+  is_official: boolean;
+  is_partner: boolean;
+  is_featured: boolean;
+  requires_join_approval: boolean;
+  member_count: number;
+  active_this_week_count: number;
+  gathering_count: number;
+  created_by_profile_id: string | null;
+  created_by_user_id: string | null;
+  approved_at: string | null;
+  rejected_reason: string | null;
+  rules: string | null;
+  safety_note: string | null;
+  created_at: string;
+  updated_at: string | null;
+};
+
+export type GatheringAdminRow = {
+  id: string;
+  circle_id: string | null;
+  title: string;
+  slug: string | null;
+  description: string | null;
+  gathering_type: string;
+  status: string;
+  country_code: string | null;
+  country_name: string | null;
+  region: string | null;
+  city: string | null;
+  venue_name: string | null;
+  venue_address: string | null;
+  address_visibility: string;
+  online_url: string | null;
+  platform: string | null;
+  starts_at: string;
+  ends_at: string | null;
+  timezone: string | null;
+  is_official: boolean;
+  is_partner_venue: boolean;
+  safe_first_date_space: boolean;
+  safety_note: string | null;
+  max_attendees: number | null;
+  attendee_count: number;
+  created_by_profile_id: string | null;
+  created_by_user_id: string | null;
+  approved_at: string | null;
+  rejected_reason: string | null;
+  tags: string[];
+  created_at: string;
+  updated_at: string | null;
+};
+
+export type RelationshipGistAdminRow = {
+  id: string;
+  title: string;
+  body: string;
+  short_body: string | null;
+  perspective: string;
+  status: string;
+  country_code: string | null;
+  city: string | null;
+  audience_tags: string[];
+  faith_tags: string[];
+  culture_tags: string[];
+  relationship_intent_tags: string[];
+  created_by_admin_id: string | null;
+  published_at: string | null;
+  scheduled_for: string | null;
+  created_at: string;
+  updated_at: string | null;
+};
+
+export type WarmIntroductionAdminRow = {
+  id: string;
+  circle_id: string | null;
+  initiator_profile_id: string | null;
+  initiator_role: string;
+  profile_a_id: string;
+  profile_b_id: string;
+  reason: string;
+  shared_context: string[];
+  status: string;
+  expires_at: string;
+  accepted_by_a_at: string | null;
+  accepted_by_b_at: string | null;
+  declined_by_profile_id: string | null;
+  created_at: string;
+  updated_at: string | null;
+};
+
 export type AdminDashboardPayload = {
   overview: AdminOverview;
   verifications: VerificationRow[];
@@ -131,5 +234,9 @@ export type AdminDashboardPayload = {
   conciergeRequests: DatePlanConciergeRow[];
   recoveryRequests: AccountRecoveryRequestRow[];
   mergeCases: AccountMergeCaseRow[];
+  circles: CircleAdminRow[];
+  gatherings: GatheringAdminRow[];
+  relationshipGists: RelationshipGistAdminRow[];
+  warmIntroductions: WarmIntroductionAdminRow[];
   moduleWarnings: string[];
 };

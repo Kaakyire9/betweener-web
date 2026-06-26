@@ -7,9 +7,13 @@ import type {
   AccountRecoveryRequestRow,
   AdminDashboardPayload,
   AdminOverview,
+  CircleAdminRow,
   DatePlanConciergeRow,
+  GatheringAdminRow,
+  RelationshipGistAdminRow,
   ReportRow,
-  VerificationRow
+  VerificationRow,
+  WarmIntroductionAdminRow
 } from "@/lib/admin/types";
 
 const EMPTY_OVERVIEW: AdminOverview = {
@@ -29,13 +33,17 @@ export async function GET() {
     return NextResponse.json({ error: session.error }, { status: session.status });
   }
 
-  const [overviewRes, verificationRes, reportsRes, conciergeRes, recoveryRes, mergeRes] = await Promise.all([
+  const [overviewRes, verificationRes, reportsRes, conciergeRes, recoveryRes, mergeRes, circlesRes, gatheringsRes, gistsRes, warmIntroRes] = await Promise.all([
     session.client.rpc("rpc_admin_dashboard_overview"),
     session.client.rpc("rpc_admin_get_verification_queue"),
     session.client.rpc("rpc_admin_get_reports_queue"),
     session.client.rpc("rpc_admin_get_date_plan_concierge_queue"),
     session.client.rpc("rpc_admin_get_account_recovery_requests"),
-    session.client.rpc("rpc_admin_get_account_merge_queue")
+    session.client.rpc("rpc_admin_get_account_merge_queue"),
+    session.client.rpc("rpc_admin_get_circles_queue"),
+    session.client.rpc("rpc_admin_get_gatherings_queue"),
+    session.client.rpc("rpc_admin_get_relationship_gists"),
+    session.client.rpc("rpc_admin_get_warm_introductions")
   ]);
 
   const firstError = overviewRes.error || verificationRes.error || reportsRes.error;
@@ -55,6 +63,18 @@ export async function GET() {
   const mergeCases = mergeRes.error
     ? (moduleWarnings.push("Account merge queue is unavailable. Confirm the latest admin migration has been applied."), [])
     : (((mergeRes.data || []) as AccountMergeCaseRow[]).slice(0, 100));
+  const circles = circlesRes.error
+    ? (moduleWarnings.push("Circles admin queue is unavailable. Confirm the Circles 2.0 migration has been applied."), [])
+    : (((circlesRes.data || []) as CircleAdminRow[]).slice(0, 120));
+  const gatherings = gatheringsRes.error
+    ? (moduleWarnings.push("Gatherings admin queue is unavailable. Confirm the Circles 2.0 migration has been applied."), [])
+    : (((gatheringsRes.data || []) as GatheringAdminRow[]).slice(0, 120));
+  const relationshipGists = gistsRes.error
+    ? (moduleWarnings.push("Relationship Gist admin queue is unavailable. Confirm the Circles 2.0 migration has been applied."), [])
+    : (((gistsRes.data || []) as RelationshipGistAdminRow[]).slice(0, 100));
+  const warmIntroductions = warmIntroRes.error
+    ? (moduleWarnings.push("Warm Introductions admin queue is unavailable. Confirm the Circles 2.0 migration has been applied."), [])
+    : (((warmIntroRes.data || []) as WarmIntroductionAdminRow[]).slice(0, 100));
 
   const withSignedUrls = await Promise.all(
     verifications.map(async (item) => {
@@ -100,6 +120,10 @@ export async function GET() {
     conciergeRequests,
     recoveryRequests,
     mergeCases,
+    circles,
+    gatherings,
+    relationshipGists,
+    warmIntroductions,
     moduleWarnings
   };
 
